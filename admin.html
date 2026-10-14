@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Content Editor — Tatva Nirman Infra</title>
+<style>
+  /* ==========================================================================
+     A deliberately different look from the public site: cool dark sidebar +
+     light dashboard content, Indigo accent, system UI font. Nothing here
+     shares a color token or font with assets/css/styles.css on purpose —
+     this should never be mistaken for a preview of the live site.
+     ========================================================================== */
+  :root{
+    --ink:#161821;--ink-2:#4a4f63;--ink-3:#7d8296;
+    --bg:#f3f4f8;--surface:#ffffff;--surface-2:#f7f8fb;--border:#e2e4ec;
+    --accent:#4f46e5;--accent-hover:#4338ca;--accent-soft:#edecfe;
+    --danger:#dc2626;--danger-soft:#fdecec;
+    --ok:#16a34a;
+    --flag-bg:#fff6e0;--flag-border:#eab30c;
+    --side-bg:#12141c;--side-bg-2:#1b1e2b;--side-ink:#c7c9db;--side-ink-dim:#7a7e97;--side-line:#282c3d;
+    --radius:10px;--radius-sm:6px;
+    --shadow:0 1px 2px rgba(20,20,40,.04),0 8px 24px -12px rgba(20,20,40,.12);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;font:15px/1.55 -apple-system,"Segoe UI",system-ui,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  h1,h2,h3{margin:0;font-weight:700}
+  code{background:var(--surface-2);border:1px solid var(--border);padding:.1em .4em;border-radius:4px;font-size:.88em}
+
+  .shell{display:grid;grid-template-columns:264px 1fr;min-height:100vh}
+
+  /* ---------- sidebar (full height, dark — the main "this is a tool, not the site" signal) ---------- */
+  .side{background:var(--side-bg);color:var(--side-ink);display:flex;flex-direction:column;
+    position:sticky;top:0;height:100vh;overflow-y:auto;padding:1.1rem .9rem}
+  .side__brand{display:flex;align-items:center;gap:.6rem;padding:.3rem .3rem 1.1rem;margin-bottom:.9rem;border-bottom:1px solid var(--side-line)}
+  .side__logo{flex:none;width:34px;height:34px;border-radius:8px;background:var(--accent);display:grid;place-items:center;
+    color:#fff;font-weight:800;font-size:.95rem;letter-spacing:-.02em}
+  .side__brand strong{display:block;color:#fff;font-size:.92rem;line-height:1.25}
+  .side__brand span{display:block;color:var(--side-ink-dim);font-size:.74rem}
+  .sidenav__search{width:100%;padding:.55rem .7rem;border:1px solid var(--side-line);border-radius:var(--radius-sm);
+    font:inherit;font-size:.83rem;margin-bottom:.7rem;background:var(--side-bg-2);color:#fff}
+  .sidenav__search::placeholder{color:var(--side-ink-dim)}
+  .sidenav__search:focus{outline:none;border-color:var(--accent)}
+  .sidenav__list{list-style:none;margin:0;padding:0;display:grid;gap:.1rem;flex:1}
+  .sidenav__item{display:flex;align-items:center;gap:.55rem;padding:.55rem .6rem;border-radius:var(--radius-sm);
+    font-size:.83rem;font-weight:600;color:var(--side-ink);cursor:pointer;border:1px solid transparent;text-align:left;
+    background:none;width:100%;font-family:inherit}
+  .sidenav__item:hover{background:var(--side-bg-2);color:#fff}
+  .sidenav__item.is-active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+  .sidenav__icon{font-size:1rem;flex:none;width:1.3em;text-align:center;line-height:1}
+  .sidenav__count{margin-left:auto;font-size:.7rem;font-weight:700;color:var(--side-ink-dim);background:var(--side-bg-2);
+    border-radius:10px;padding:.05rem .45rem}
+  .sidenav__item.is-active .sidenav__count{background:#fff;color:var(--accent)}
+  .sidenav__item.is-hidden{display:none}
+  .sidenav__empty{padding:.6rem .55rem;font-size:.78rem;color:var(--side-ink-dim)}
+  @media (max-width:900px){
+    .shell{grid-template-columns:1fr}
+    .side{position:static;height:auto}
+    .sidenav__list{display:flex;flex-wrap:wrap;gap:.3rem}
+    .sidenav__item{width:auto}
+  }
+
+  /* ---------- top bar + main content ---------- */
+  .content{min-width:0}
+  .bar{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;
+    background:var(--surface);padding:.85rem 1.4rem;border-bottom:1px solid var(--border)}
+  .bar__title{display:flex;flex-direction:column;gap:.1rem}
+  .bar__title strong{color:var(--ink);font-size:1.05rem}
+  .bar__title span{color:var(--ink-3);font-size:.8rem}
+  .bar__actions{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}
+  .status{font-size:.78rem;color:var(--ink-3);margin-right:.4rem;min-width:8em}
+
+  .btn{display:inline-flex;align-items:center;gap:.4rem;padding:.55rem 1rem;border-radius:var(--radius-sm);
+    border:1px solid transparent;font-size:.82rem;font-weight:650;cursor:pointer;white-space:nowrap;font-family:inherit}
+  .btn--ghost{border-color:var(--border);background:var(--surface);color:var(--ink-2)}
+  .btn--ghost:hover{border-color:var(--ink-3);color:var(--ink)}
+  .btn--accent{background:var(--accent);color:#fff}
+  .btn--accent:hover{background:var(--accent-hover)}
+  .btn--primary{background:var(--ink);color:#fff}
+  .btn--primary:hover{background:#000}
+  .btn--sm{padding:.42rem .75rem;font-size:.78rem}
+
+  .intro{max-width:960px;margin:1.2rem 1.4rem 0;padding:.9rem 1.1rem;color:var(--ink-2);font-size:.86rem;
+    background:var(--surface);border:1px solid var(--border);border-radius:var(--radius)}
+  .intro ol{padding-left:1.2rem;margin:.5rem 0 0}
+  .intro li{margin-bottom:.3rem}
+  .todo-sample{background:var(--flag-bg);border-bottom:1px dashed var(--flag-border);padding:0 .2em}
+  .draft-notice{margin-top:.8rem;padding:.7rem 1rem;background:var(--flag-bg);border:1px solid var(--flag-border);border-radius:var(--radius-sm);font-size:.86rem}
+  .linklike{background:none;border:none;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer;font:inherit}
+
+  main{max-width:960px;margin:1.2rem 1.4rem 4rem;display:grid;gap:.9rem}
+
+  .section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;
+    scroll-margin-top:76px;box-shadow:var(--shadow)}
+  .section > summary{cursor:pointer;padding:1rem 1.1rem;background:var(--surface);
+    list-style:none;display:flex;align-items:flex-start;gap:.7rem;border-left:3px solid transparent}
+  .section[open] > summary{border-left-color:var(--accent);background:var(--accent-soft)}
+  .section > summary::-webkit-details-marker{display:none}
+  .section__arrow{flex:none;display:inline-block;transition:transform .15s ease;color:var(--accent);
+    font-size:.8rem;margin-top:.2rem}
+  .section[open] > summary .section__arrow{transform:rotate(90deg)}
+  .section__icon{flex:none;font-size:1.35rem;line-height:1;margin-top:-.1rem}
+  .section__titlewrap{display:grid;gap:.15rem;min-width:0}
+  .section__title{font-weight:700;font-size:1.02rem;display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;color:var(--ink)}
+  .section__count{font-size:.72rem;font-weight:700;color:var(--accent);background:var(--accent-soft);
+    border:1px solid var(--accent);border-radius:10px;padding:.05rem .5rem}
+  .section__desc{font-size:.8rem;color:var(--ink-3);font-weight:500}
+  .section__body{padding:1.2rem 1.1rem 1.1rem;border-top:1px solid var(--border)}
+
+  fieldset.nested{border:1px solid var(--border);border-radius:var(--radius-sm);margin:0 0 1rem;padding:.85rem .9rem;background:var(--surface-2)}
+  fieldset.nested legend{padding:0 .4rem;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+
+  .field{display:grid;gap:.3rem;margin-bottom:.9rem}
+  .field label{font-size:.78rem;font-weight:700;color:var(--ink-2)}
+  .field input,.field textarea,.field select{font:inherit;font-size:.9rem;padding:.55rem .7rem;border:1px solid var(--border);
+    border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);width:100%}
+  .field textarea{min-height:70px;resize:vertical}
+  .field select{cursor:pointer}
+  .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .field--flag input,.field--flag textarea{background:var(--flag-bg);border-color:var(--flag-border)}
+  .field input[type="checkbox"]{width:auto}
+  .field input[type="number"]{max-width:12rem}
+
+  /* ---------- image field: thumbnail + file picker instead of a bare path box ---------- */
+  .imgfield__row{display:flex;gap:.8rem;align-items:flex-start}
+  .imgfield__thumb{flex:none;width:64px;height:64px;border-radius:var(--radius-sm);border:1px dashed var(--border);
+    background:var(--surface-2);display:grid;place-items:center;overflow:hidden;position:relative}
+  .imgfield__thumb img{width:100%;height:100%;object-fit:cover;display:none}
+  .imgfield__thumb.has-img img{display:block}
+  .imgfield__thumb.has-img .imgfield__thumbEmpty{display:none}
+  .imgfield__thumbEmpty{font-size:.62rem;color:var(--ink-3);text-align:center;line-height:1.3;padding:0 .3rem}
+  .imgfield__main{flex:1;min-width:0;display:grid;gap:.4rem}
+  .imgfield__path{font:inherit;font-size:.85rem;padding:.5rem .65rem;border:1px solid var(--border);
+    border-radius:var(--radius-sm);background:var(--surface);color:var(--ink);width:100%}
+  .imgfield__path:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .imgfield__hint{margin:0;font-size:.76rem;color:var(--ink-3);line-height:1.5}
+  .imgfield__hint code{font-size:.9em}
+  .imgfield.field--flag .imgfield__path{background:var(--flag-bg);border-color:var(--flag-border)}
+
+  .listfield{margin-bottom:1rem}
+  .listfield > label{font-size:.78rem;font-weight:700;color:var(--ink-2);display:block;margin-bottom:.4rem}
+  .listfield__items{display:grid;gap:.4rem;margin-bottom:.5rem}
+  .listfield__row{display:flex;gap:.4rem;align-items:flex-start}
+  .listfield__row input,.listfield__row textarea{font:inherit;font-size:.9rem;padding:.5rem .65rem;border:1px solid var(--border);
+    border-radius:var(--radius-sm);background:var(--surface);flex:1;min-height:38px}
+
+  .listobjfield{margin-bottom:1rem}
+  .listobjfield__label{font-size:.78rem;font-weight:700;color:var(--ink-2);margin-bottom:.5rem}
+  .listobjfield__items{display:grid;gap:.7rem;margin-bottom:.6rem}
+  .card{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;background:var(--surface)}
+  .card__head{display:flex;align-items:center;justify-content:space-between;gap:.6rem;padding:.55rem .8rem;
+    background:var(--surface-2);font-size:.82rem;font-weight:700;color:var(--ink-2)}
+  .card__actions{display:flex;gap:.3rem}
+  .card__body{padding:.9rem .9rem 0}
+
+  .iconbtn{border:1px solid var(--border);background:var(--surface);border-radius:var(--radius-sm);padding:.3rem .55rem;
+    font-size:.76rem;cursor:pointer;color:var(--ink-2)}
+  .iconbtn:hover{border-color:var(--ink-3);color:var(--ink)}
+  .iconbtn--danger:hover{border-color:var(--danger);color:var(--danger);background:var(--danger-soft)}
+
+  /* ---------- the "Add new" affordance — the actual fix for "I don't know
+     where to add things": a big, obvious, dashed-border action placed at the
+     TOP of every list, before any existing entries, instead of a small ghost
+     button easy to miss after scrolling past everything already filled in. */
+  .addnew{display:flex;align-items:center;gap:.6rem;width:100%;padding:.75rem .9rem;margin-bottom:.7rem;
+    border:1.5px dashed var(--accent);border-radius:var(--radius-sm);background:var(--accent-soft);color:var(--accent);
+    font:inherit;font-size:.85rem;font-weight:700;cursor:pointer;text-align:left}
+  .addnew:hover{background:var(--accent);color:#fff;border-style:solid}
+  .addnew__plus{flex:none;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;
+    display:grid;place-items:center;font-size:1rem;line-height:1}
+  .addnew:hover .addnew__plus{background:#fff;color:var(--accent)}
+
+  @media (max-width:640px){
+    .bar{flex-direction:column;align-items:stretch}
+    .bar__actions{justify-content:flex-end}
+    .intro,main{margin-left:.9rem;margin-right:.9rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <nav class="side" aria-label="Jump to section">
+    <div class="side__brand">
+      <div class="side__logo">TN</div>
+      <div><strong>Content Editor</strong><span>Tatva Nirman Infra</span></div>
+    </div>
+    <input type="search" id="sideSearch" class="sidenav__search" placeholder="Search sections…">
+    <ul class="sidenav__list" id="sidenavList"></ul>
+    <p class="sidenav__empty" id="sidenavEmpty" hidden>No sections match.</p>
+  </nav>
+
+  <div class="content">
+    <header class="bar">
+      <div class="bar__title"><strong>Edit site content</strong><span>Changes apply after Save</span></div>
+      <div class="bar__actions">
+        <span class="status" id="status"></span>
+        <button id="btnReset" class="btn btn--ghost btn--sm" type="button">Reset</button>
+        <button id="btnPreview" class="btn btn--accent" type="button">Preview on site</button>
+        <button id="btnSave" class="btn btn--primary" type="button">Save changes</button>
+      </div>
+    </header>
+
+    <div class="intro">
+      <p>This edits a working copy of <code>assets/js/content.js</code> entirely in your browser — nothing is uploaded
+      anywhere. Fields highlighted like <span class="todo-sample">this</span> still contain a
+      <code>[[placeholder]]</code> and need a real value before the site goes live. To add a new entry to any list
+      (a project, a job opening, an FAQ, etc.), look for the dashed <strong>+ Add</strong> button at the
+      <strong>top</strong> of that list, above the existing entries.</p>
+      <ol>
+        <li>Expand a section below and edit the fields.</li>
+        <li><strong>Preview on site</strong> opens the live layout in a new tab with your unsaved edits.</li>
+        <li><strong>Save changes</strong> writes them straight into <code>assets/js/content.js</code> when this page is
+          served over <code>http://</code> (Chrome/Edge/Brave). Opened as a local file (<code>file://…</code>, i.e.
+          double-clicked), browsers block that, so it downloads <code>content.js</code> instead — replace the one in
+          <code>assets/js/</code> with the downloaded copy.</li>
+      </ol>
+      <p class="draft-notice" id="draftNotice" hidden></p>
+    </div>
+
+    <main id="sections"></main>
+  </div>
+</div>
+
+<!-- 1. Content (this is what you're editing)  2. Editor logic below (leave alone) -->
+<script src="assets/js/content.js"></script>
+<script>
+(function () {
+  "use strict";
+  var STORAGE_KEY = "TN_ADMIN_DRAFT";
+  var ORIGINAL = window.SITE_CONTENT;
+  var statusEl = document.getElementById("status");
+  var root = document.getElementById("sections");
+
+  if (!ORIGINAL) {
+    root.innerHTML = "<p style='padding:1.5rem;color:#8f2a1c'>assets/js/content.js did not load — open this page " +
+      "from the project folder (not a single copied file) so the script tag can find it.</p>";
+    return;
+  }
+
+  function setStatus(s) { statusEl.textContent = s; }
+
+  /* A stale browser draft must never silently win over the real file on
+     disk — that's exactly how a much-older draft once got saved over a
+     current content.js and wiped a long editing session. If the draft is
+     byte-identical to ORIGINAL there's nothing at risk, so load it quietly.
+     If it differs, default to ORIGINAL (what's actually on disk) and make
+     the user explicitly opt into the old draft instead, with its age shown
+     so the choice is informed rather than a easy-to-miss dismiss-and-move-on
+     notice. */
+  var TS_KEY = STORAGE_KEY + "_ts";
+  var FORCE_KEY = STORAGE_KEY + "_forceLoad"; // one-shot flag set right before a reload the user explicitly asked for
+  var data = JSON.parse(JSON.stringify(ORIGINAL));
+  var usingDraft = false;
+  var draftRaw = null, draftTs = null, draftData = null, forceLoad = false;
+  try {
+    draftRaw = localStorage.getItem(STORAGE_KEY);
+    draftTs = localStorage.getItem(TS_KEY);
+    forceLoad = sessionStorage.getItem(FORCE_KEY) === "1";
+    sessionStorage.removeItem(FORCE_KEY);
+  } catch (e) { /* private browsing */ }
+  if (draftRaw) {
+    try { draftData = JSON.parse(draftRaw); } catch (e) { draftData = null; }
+  }
+
+  var notice = document.getElementById("draftNotice");
+  if (draftData) {
+    var identical = JSON.stringify(draftData) === JSON.stringify(ORIGINAL);
+    if (identical || forceLoad) {
+      data = draftData;
+      usingDraft = true;
+    } else {
+      var ageText = draftTs ? new Date(Number(draftTs)).toLocaleString() : "an earlier session";
+      notice.hidden = false;
+      notice.innerHTML = "This browser has an unsaved draft from " + ageText +
+        " that is <strong>different</strong> from the content.js currently on disk. " +
+        "Showing the current file below. " +
+        '<button id="loadOldDraft" class="linklike" type="button">Load that old draft instead</button> &middot; ' +
+        '<button id="discardDraft" class="linklike" type="button">Discard the old draft</button>';
+      document.getElementById("loadOldDraft").addEventListener("click", function () {
+        if (!confirm("This will replace what you're editing with the old browser draft from " + ageText +
+          ", discarding anything currently in content.js that isn't in that draft. Continue?")) return;
+        try { sessionStorage.setItem(FORCE_KEY, "1"); } catch (e) {}
+        location.reload();
+      });
+      document.getElementById("discardDraft").addEventListener("click", function () {
+        try { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(TS_KEY); } catch (e) {}
+        location.reload();
+      });
+    }
+  }
+
+  var saveTimer;
+  function markDirty() {
+    clearTimeout(saveTimer);
+    setStatus("Editing…");
+    saveTimer = setTimeout(function () {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        localStorage.setItem(TS_KEY, String(Date.now()));
+        setStatus("Draft saved in this browser");
+      } catch (e) {
+        setStatus("Could not autosave (storage full/blocked)");
+      }
+    }, 400);
+  }
+
+  /* ---------- plain-language section metadata (purely descriptive — safe to
+     extend if new top-level keys are added to content.js; unmapped keys just
+     fall back to an icon-less label with no description) ---------- */
+  var SECTION_META = {
+    company:      { icon: "🏢", desc: "Company name, directors and registered details" },
+    contact:      { icon: "📞", desc: "Phone, email and office addresses for every state" },
+    nav:          { icon: "🧭", desc: "Header menu links" },
+    navCta:       { icon: "🔘", desc: "Header call-to-action button" },
+    hero:         { icon: "🎬", desc: "Homepage hero slider — headline, subtitle, images" },
+    clientWall:   { icon: "🤝", desc: "“Trusted partners” wall — department & board logos" },
+    trustBar:     { icon: "🏅", desc: "Trust strip shown under the hero" },
+    stats:        { icon: "📊", desc: "Homepage stat counters (projects, states, etc.)" },
+    about:        { icon: "ℹ️", desc: "About section — company story, vision & mission" },
+    services:     { icon: "🛠️", desc: "Services list" },
+    capabilities: { icon: "⚙️", desc: "Execution strengths / capabilities" },
+    sectors:      { icon: "🏛️", desc: "Government programmes & client categories" },
+    process:      { icon: "🔢", desc: "“How we deliver” step-by-step process" },
+    projects:     { icon: "🏗️", desc: "Projects page — every project entry" },
+    presence:     { icon: "🗺️", desc: "States of operation" },
+    credentials:  { icon: "📜", desc: "Certifications — ISO, MSME, GST, etc." },
+    testimonials: { icon: "💬", desc: "Client testimonials" },
+    vendors:      { icon: "📋", desc: "Vendor / subcontractor registration page" },
+    careers:      { icon: "💼", desc: "Careers page — job openings" },
+    notices:      { icon: "📢", desc: "Notices / announcements" },
+    downloads:    { icon: "📥", desc: "Downloadable documents" },
+    faq:          { icon: "❓", desc: "Frequently asked questions" },
+    form:         { icon: "✉️", desc: "Enquiry form labels & settings" },
+    footer:       { icon: "🔗", desc: "Footer links" },
+    seo:          { icon: "🔍", desc: "Page title, description and keywords" }
+  };
+  function metaFor(key) { return SECTION_META[key] || { icon: "📄", desc: "" }; }
+  function countFor(value) {
+    if (Array.isArray(value)) return value.length;
+    return null;
+  }
+
+  /* ---------- helpers ---------- */
+  function label(key) {
+    return String(key).replace(/([a-z0-9])([A-Z])/g, "$1 $2").replace(/^./, function (c) { return c.toUpperCase(); });
+  }
+  var LONGTEXT = /desc|paragraph|lead|mission|vision|summary|scope|note|text|body|subtitle|quote|about|intro|disclaimer|consent|applyNote/i;
+  function isLongField(key, value) {
+    return LONGTEXT.test(key) || (typeof value === "string" && value.length > 80);
+  }
+  function isPlaceholder(v) { return typeof v === "string" && /\[\[.+?\]\]/.test(v); }
+
+  function fieldWrap(labelText, inputEl) {
+    var wrap = document.createElement("div");
+    wrap.className = "field";
+    var l = document.createElement("label");
+    l.textContent = labelText;
+    wrap.appendChild(l);
+    wrap.appendChild(inputEl);
+    return wrap;
+  }
+
+  /* A field counts as "an image path" by name, not by looking at its
+     current value — image / logo / logoImage / photo, but not the
+     accompanying *Alt text field. */
+  var IMAGE_FIELD = /(^|[A-Z])(image|logo|photo)($|s$)/i;
+  function isImageField(key) {
+    return IMAGE_FIELD.test(key) && !/alt$/i.test(key);
+  }
+
+  /* Fields with a small fixed set of valid values become a real <select>
+     instead of free text — no more typing "Sewerage & Drainage" by hand and
+     hoping it matches a filter category exactly. "category" is sourced live
+     from projects.filters (minus "All") so it always matches whatever
+     categories actually exist; "status" is the two values used everywhere
+     it appears. Extend this map if another field like it shows up. */
+  function enumOptionsFor(key) {
+    if (key === "status") return ["Ongoing", "Completed"];
+    if (key === "category" && data.projects && Array.isArray(data.projects.filters)) {
+      return data.projects.filters.filter(function (f) { return f !== "All"; });
+    }
+    return null;
+  }
+
+  function makeSelectField(obj, key, options) {
+    var el = document.createElement("select");
+    var current = obj[key];
+    var needsPlaceholder = !current || options.indexOf(current) === -1;
+    if (current && options.indexOf(current) === -1) options = options.concat([current]);
+
+    if (needsPlaceholder) {
+      // A <select> with nothing explicitly selected still visually shows its
+      // first real option selected — but that's only a display default, the
+      // underlying value was never actually set, so a brand-new item would
+      // save as blank even though a category looked chosen. A real
+      // placeholder option closes that gap: it's what's shown AND it's
+      // what's saved until you actually pick one.
+      var ph = document.createElement("option");
+      ph.value = ""; ph.textContent = "— Select " + label(key).toLowerCase() + " —";
+      ph.selected = true;
+      el.appendChild(ph);
+    }
+    options.forEach(function (opt) {
+      var o = document.createElement("option");
+      o.value = opt; o.textContent = opt;
+      if (opt === current) o.selected = true;
+      el.appendChild(o);
+    });
+    el.addEventListener("change", function () {
+      obj[key] = el.value;
+      markDirty();
+      wrap.classList.toggle("field--flag", !el.value);
+    });
+    var wrap = fieldWrap(label(key), el);
+    if (needsPlaceholder) wrap.classList.add("field--flag");
+    return wrap;
+  }
+
+  function makePrimitiveField(container, obj, key) {
+    var value = obj[key], type = typeof value, el, wrap;
+    var enumOptions = type === "string" ? enumOptionsFor(key) : null;
+
+    if (type === "boolean") {
+      el = document.createElement("input");
+      el.type = "checkbox";
+      el.checked = value;
+      el.addEventListener("change", function () { obj[key] = el.checked; markDirty(); });
+      wrap = fieldWrap(label(key), el);
+    } else if (type === "number") {
+      el = document.createElement("input");
+      el.type = "number";
+      el.value = value;
+      el.addEventListener("input", function () { obj[key] = el.value === "" ? 0 : Number(el.value); markDirty(); });
+      wrap = fieldWrap(label(key), el);
+    } else if (isImageField(key)) {
+      wrap = makeImageField(obj, key);
+    } else if (enumOptions) {
+      wrap = makeSelectField(obj, key, enumOptions);
+    } else {
+      var isLong = isLongField(key, value);
+      el = document.createElement(isLong ? "textarea" : "input");
+      if (!isLong) el.type = "text";
+      el.value = value == null ? "" : value;
+      el.addEventListener("input", function () {
+        obj[key] = el.value;
+        markDirty();
+        wrap.classList.toggle("field--flag", isPlaceholder(obj[key]));
+      });
+      wrap = fieldWrap(label(key), el);
+      if (isPlaceholder(value)) wrap.classList.add("field--flag");
+    }
+    container.appendChild(wrap);
+  }
+
+  /* Image fields get a real file picker instead of a bare text box. There's
+     no server here, so picking a file can't silently copy it into
+     assets/img/ — the browser has no write access to arbitrary folders on
+     disk. What this DOES give: browse-and-preview instead of typing a path
+     blind, an instant thumbnail (via a local blob URL — preview only, not
+     saved anywhere), and the exact path the field is set to so the file
+     just needs to be dropped into that spot in the project folder. */
+  function makeImageField(obj, key) {
+    var value = obj[key] || "";
+    var wrap = document.createElement("div");
+    wrap.className = "field imgfield";
+    var l = document.createElement("label");
+    l.textContent = label(key);
+    wrap.appendChild(l);
+
+    var row = document.createElement("div");
+    row.className = "imgfield__row";
+
+    var thumb = document.createElement("div");
+    thumb.className = "imgfield__thumb";
+    var thumbImg = document.createElement("img");
+    thumbImg.alt = "";
+    var thumbEmpty = document.createElement("span");
+    thumbEmpty.className = "imgfield__thumbEmpty";
+    thumbEmpty.textContent = "No image";
+    thumb.appendChild(thumbImg);
+    thumb.appendChild(thumbEmpty);
+
+    function refreshThumbFromPath(path) {
+      if (!path) { thumbImg.removeAttribute("src"); thumb.classList.remove("has-img"); return; }
+      thumbImg.onerror = function () { thumb.classList.remove("has-img"); };
+      thumbImg.onload = function () { thumb.classList.add("has-img"); };
+      thumbImg.src = path;
+    }
+    refreshThumbFromPath(value);
+
+    var main = document.createElement("div");
+    main.className = "imgfield__main";
+
+    var pathInput = document.createElement("input");
+    pathInput.type = "text";
+    pathInput.className = "imgfield__path";
+    pathInput.placeholder = "assets/img/…";
+    pathInput.value = value;
+    pathInput.addEventListener("input", function () {
+      obj[key] = pathInput.value;
+      markDirty();
+      refreshThumbFromPath(pathInput.value);
+    });
+
+    var pickBtn = document.createElement("button");
+    pickBtn.type = "button";
+    pickBtn.className = "btn btn--ghost btn--sm";
+    pickBtn.textContent = "Choose image…";
+
+    var hint = document.createElement("p");
+    hint.className = "imgfield__hint";
+    hint.textContent = value
+      ? "Path: " + value
+      : "Nothing set yet — pick a file to preview it and get a suggested path.";
+
+    var fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "image/*";
+    fileInput.style.display = "none";
+    pickBtn.addEventListener("click", function () { fileInput.click(); });
+
+    fileInput.addEventListener("change", function () {
+      var file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+      // Reuse whatever folder the field already pointed at; otherwise default
+      // to assets/img/ so it's obviously wrong-but-safe rather than a guess
+      // that looks confidently correct.
+      var folder = "assets/img/";
+      var existing = pathInput.value.trim();
+      var slash = existing.lastIndexOf("/");
+      if (slash !== -1) folder = existing.slice(0, slash + 1);
+      var safeName = file.name.replace(/\s+/g, "-").toLowerCase();
+      var suggested = folder + safeName;
+
+      pathInput.value = suggested;
+      obj[key] = suggested;
+      markDirty();
+      hint.textContent = "";
+      hint.appendChild(document.createTextNode("Save the file you picked as "));
+      var code = document.createElement("code");
+      code.textContent = suggested;
+      hint.appendChild(code);
+      hint.appendChild(document.createTextNode(" in the project folder — the preview below is local to this browser tab only, nothing is uploaded or copied automatically."));
+
+      var blobUrl = URL.createObjectURL(file);
+      thumbImg.onerror = null;
+      thumbImg.onload = function () { thumb.classList.add("has-img"); };
+      thumbImg.src = blobUrl;
+    });
+
+    main.appendChild(pathInput);
+    main.appendChild(pickBtn);
+    main.appendChild(hint);
+    row.appendChild(thumb);
+    row.appendChild(main);
+    row.appendChild(fileInput);
+    wrap.appendChild(row);
+    if (isPlaceholder(value)) wrap.classList.add("field--flag");
+    return wrap;
+  }
+
+  /* The prominent, hard-to-miss "add a new one" action — always placed
+     before the existing items, never buried below a long list. */
+  function mkAddBtn(text, onClick) {
+    var add = document.createElement("button");
+    add.type = "button";
+    add.className = "addnew";
+    var plus = document.createElement("span");
+    plus.className = "addnew__plus";
+    plus.textContent = "+";
+    var txt = document.createElement("span");
+    txt.textContent = text;
+    add.appendChild(plus);
+    add.appendChild(txt);
+    add.addEventListener("click", onClick);
+    return add;
+  }
+
+  function makeListOfPrimitives(container, obj, key) {
+    var list0 = obj[key];
+    var wrap = document.createElement("div");
+    wrap.className = "listfield";
+    var l = document.createElement("label");
+    l.textContent = label(key);
+    wrap.appendChild(l);
+    var itemsEl = document.createElement("div");
+    itemsEl.className = "listfield__items";
+
+    function render() {
+      itemsEl.innerHTML = "";
+      list0.forEach(function (item, i) {
+        var row = document.createElement("div");
+        row.className = "listfield__row";
+        var isLong = typeof item === "string" && item.length > 80;
+        var el = document.createElement(isLong ? "textarea" : "input");
+        if (!isLong) el.type = "text";
+        el.value = item;
+        el.addEventListener("input", function () { list0[i] = el.value; markDirty(); });
+        var rm = mkIconBtn("Remove", "Remove this item", function () { list0.splice(i, 1); markDirty(); render(); });
+        row.appendChild(el);
+        row.appendChild(rm);
+        itemsEl.appendChild(row);
+      });
+    }
+    render();
+
+    wrap.appendChild(mkAddBtn("Add " + label(key).toLowerCase().replace(/s$/, ""), function () {
+      list0.unshift("");
+      markDirty(); render();
+      var firstInput = itemsEl.querySelector("input,textarea");
+      if (firstInput) firstInput.focus();
+    }));
+    wrap.appendChild(itemsEl);
+    container.appendChild(wrap);
+  }
+
+  function emptyLike(sample) {
+    var out = {};
+    Object.keys(sample).forEach(function (k) {
+      var v = sample[k];
+      if (Array.isArray(v)) out[k] = [];
+      else if (v !== null && typeof v === "object") out[k] = emptyLike(v);
+      else if (typeof v === "number") out[k] = 0;
+      else if (typeof v === "boolean") out[k] = false;
+      else out[k] = "";
+    });
+    return out;
+  }
+
+  function mkIconBtn(txt, title, fn) {
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "iconbtn"; b.textContent = txt; b.title = title;
+    b.addEventListener("click", fn);
+    return b;
+  }
+
+  function makeListOfObjects(container, obj, key) {
+    var list0 = obj[key];
+    var wrap = document.createElement("div");
+    wrap.className = "listobjfield";
+    var l = document.createElement("div");
+    l.className = "listobjfield__label";
+    wrap.appendChild(l);
+    var itemsEl = document.createElement("div");
+    itemsEl.className = "listobjfield__items";
+
+    function titleFor(item) {
+      var t = item && (item.name || item.title || item.state || item.q || item.network || item.label);
+      return t ? " — " + String(t).replace(/\[\[|\]\]/g, "").slice(0, 60) : "";
+    }
+
+    function render() {
+      l.textContent = label(key) + " (" + list0.length + ")";
+      itemsEl.innerHTML = "";
+      list0.forEach(function (item, i) {
+        var card = document.createElement("div");
+        card.className = "card";
+        var head = document.createElement("div");
+        head.className = "card__head";
+        var t = document.createElement("span");
+        t.textContent = "#" + (i + 1) + titleFor(item);
+        head.appendChild(t);
+        var actions = document.createElement("div");
+        actions.className = "card__actions";
+        if (i > 0) actions.appendChild(mkIconBtn("Up", "Move up", function () {
+          list0.splice(i - 1, 0, list0.splice(i, 1)[0]); markDirty(); render();
+        }));
+        if (i < list0.length - 1) actions.appendChild(mkIconBtn("Down", "Move down", function () {
+          list0.splice(i + 1, 0, list0.splice(i, 1)[0]); markDirty(); render();
+        }));
+        actions.appendChild(mkIconBtn("Remove", "Remove this entry", function () {
+          if (!confirm("Remove this entry?")) return;
+          list0.splice(i, 1); markDirty(); render();
+        }));
+        head.appendChild(actions);
+        card.appendChild(head);
+        var body = document.createElement("div");
+        body.className = "card__body";
+        makeObjectFields(body, item);
+        card.appendChild(body);
+        itemsEl.appendChild(card);
+      });
+    }
+    render();
+
+    /* New entries are appended at the end (not the top) so existing
+       entries keep the same position — several of these lists (Projects,
+       clientWall, states) generate deep-link IDs from their index, and
+       reshuffling would break any links already shared. The add button
+       still sits at the top for visibility; after adding we scroll straight
+       to the new card and focus its first field so there's no hunting for
+       it at the bottom of a long list. */
+    wrap.appendChild(mkAddBtn("Add " + label(key).replace(/s$/, "").toLowerCase(), function () {
+      var sample = list0.length ? list0[list0.length - 1] : {};
+      list0.push(emptyLike(sample));
+      markDirty(); render();
+      var newCard = itemsEl.lastElementChild;
+      if (newCard) {
+        newCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        var firstInput = newCard.querySelector("input,textarea");
+        if (firstInput) firstInput.focus();
+      }
+    }));
+    wrap.appendChild(itemsEl);
+    container.appendChild(wrap);
+  }
+
+  function makeObjectFields(container, obj) {
+    Object.keys(obj).forEach(function (key) {
+      var value = obj[key];
+      if (Array.isArray(value)) {
+        if (value.length === 0 || typeof value[0] !== "object" || value[0] === null) {
+          makeListOfPrimitives(container, obj, key);
+        } else {
+          makeListOfObjects(container, obj, key);
+        }
+      } else if (value !== null && typeof value === "object") {
+        var fs = document.createElement("fieldset");
+        fs.className = "nested";
+        var lg = document.createElement("legend");
+        lg.textContent = label(key);
+        fs.appendChild(lg);
+        makeObjectFields(fs, value);
+        container.appendChild(fs);
+      } else {
+        makePrimitiveField(container, obj, key);
+      }
+    });
+  }
+
+  /* ---------- build one collapsible section per top-level key, plus a
+     matching sidebar entry for quick navigation ---------- */
+  var sidenavList = document.getElementById("sidenavList");
+  var sidenavEmpty = document.getElementById("sidenavEmpty");
+  var navEntries = []; // { topKey, itemEl, detEl, searchText }
+
+  Object.keys(data).forEach(function (topKey) {
+    var meta = metaFor(topKey);
+    var value = data[topKey];
+    var count = countFor(value);
+
+    var det = document.createElement("details");
+    det.className = "section";
+    det.id = "section-" + topKey;
+
+    var sum = document.createElement("summary");
+    var arrow = document.createElement("span");
+    arrow.className = "section__arrow";
+    arrow.textContent = "▸";
+    var icon = document.createElement("span");
+    icon.className = "section__icon";
+    icon.textContent = meta.icon;
+    var titlewrap = document.createElement("div");
+    titlewrap.className = "section__titlewrap";
+    var titleRow = document.createElement("div");
+    titleRow.className = "section__title";
+    var titleText = document.createElement("span");
+    titleText.textContent = label(topKey);
+    titleRow.appendChild(titleText);
+    if (count !== null) {
+      var countBadge = document.createElement("span");
+      countBadge.className = "section__count";
+      countBadge.textContent = count;
+      titleRow.appendChild(countBadge);
+    }
+    titlewrap.appendChild(titleRow);
+    if (meta.desc) {
+      var descEl = document.createElement("div");
+      descEl.className = "section__desc";
+      descEl.textContent = meta.desc;
+      titlewrap.appendChild(descEl);
+    }
+    sum.appendChild(arrow);
+    sum.appendChild(icon);
+    sum.appendChild(titlewrap);
+    det.appendChild(sum);
+
+    var body = document.createElement("div");
+    body.className = "section__body";
+    det.appendChild(body);
+
+    if (Array.isArray(value)) {
+      if (value.length === 0 || typeof value[0] !== "object" || value[0] === null) makeListOfPrimitives(body, data, topKey);
+      else makeListOfObjects(body, data, topKey);
+    } else if (value !== null && typeof value === "object") {
+      makeObjectFields(body, value);
+    } else {
+      makePrimitiveField(body, data, topKey);
+    }
+    root.appendChild(det);
+
+    /* sidebar entry */
+    var item = document.createElement("li");
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "sidenav__item";
+    var btnIcon = document.createElement("span");
+    btnIcon.className = "sidenav__icon";
+    btnIcon.textContent = meta.icon;
+    var btnLabel = document.createElement("span");
+    btnLabel.textContent = label(topKey);
+    btn.appendChild(btnIcon);
+    btn.appendChild(btnLabel);
+    if (count !== null) {
+      var btnCount = document.createElement("span");
+      btnCount.className = "sidenav__count";
+      btnCount.textContent = count;
+      btn.appendChild(btnCount);
+    }
+    btn.addEventListener("click", function () {
+      det.open = true;
+      det.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    item.appendChild(btn);
+    sidenavList.appendChild(item);
+
+    var searchText = (label(topKey) + " " + (meta.desc || "") + " " + JSON.stringify(value || "")).toLowerCase();
+    navEntries.push({ topKey: topKey, itemEl: item, btnEl: btn, detEl: det, searchText: searchText });
+  });
+
+  /* ---------- sidebar search filter ---------- */
+  var sideSearch = document.getElementById("sideSearch");
+  sideSearch.addEventListener("input", function () {
+    var q = sideSearch.value.trim().toLowerCase();
+    var visible = 0;
+    navEntries.forEach(function (e) {
+      var match = !q || e.searchText.indexOf(q) !== -1;
+      e.itemEl.classList.toggle("is-hidden", !match);
+      if (match) visible++;
+    });
+    sidenavEmpty.hidden = visible !== 0;
+  });
+
+  /* ---------- sidebar active-section highlight while scrolling ---------- */
+  if (typeof IntersectionObserver === "function") {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        var match = navEntries.filter(function (e) { return e.detEl === en.target; })[0];
+        if (match) match.btnEl.classList.toggle("is-active", en.isIntersecting);
+      });
+    }, { rootMargin: "-80px 0px -70% 0px", threshold: 0 });
+    navEntries.forEach(function (e) { io.observe(e.detEl); });
+  }
+
+  /* ---------- toolbar ---------- */
+  document.getElementById("btnPreview").addEventListener("click", function () {
+    try {
+      sessionStorage.setItem("TN_PREVIEW", JSON.stringify(data));
+      window.open("index.html?preview=1", "_blank");
+    } catch (e) {
+      alert("Could not open preview: " + e.message);
+    }
+  });
+
+  document.getElementById("btnReset").addEventListener("click", function () {
+    if (!confirm("Discard all edits in this browser and reload the original content.js?")) return;
+    try { localStorage.removeItem(STORAGE_KEY); localStorage.removeItem(TS_KEY); } catch (e) {}
+    location.reload();
+  });
+
+  /* ---------- direct save to assets/js/content.js ----------
+     Chrome/Edge/Brave support the File System Access API, which lets a page
+     write straight to a file the user has picked — no manual "download,
+     then drag the file over the old one" step. Two things rule it out even
+     though the function exists on window: (a) browsers other than
+     Chromium-based ones don't implement it at all, and (b) Chromium refuses
+     to use it on a page opened as a local file (file://…) regardless of
+     browser — it only works when the page is served over http(s). In both
+     cases we fall back to a download and say so; the button still does one
+     job either way. */
+  var DB_NAME = "tn-admin-editor", STORE = "handles", KEY = "contentFile";
+  var fileHandle = null;
+  var isFileProtocol = location.protocol === "file:";
+  var canSaveDirect = typeof window.showOpenFilePicker === "function" && !isFileProtocol;
+
+  function idbStore(mode) {
+    return new Promise(function (resolve) {
+      var req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = function () { req.result.createObjectStore(STORE); };
+      req.onsuccess = function () { resolve(req.result.transaction(STORE, mode).objectStore(STORE)); };
+      req.onerror = function () { resolve(null); };
+    });
+  }
+  function idbGetHandle() {
+    return idbStore("readonly").then(function (store) {
+      if (!store) return null;
+      return new Promise(function (resolve) {
+        var g = store.get(KEY);
+        g.onsuccess = function () { resolve(g.result || null); };
+        g.onerror = function () { resolve(null); };
+      });
+    });
+  }
+  function idbSetHandle(handle) {
+    return idbStore("readwrite").then(function (store) {
+      if (!store) return;
+      store.put(handle, KEY);
+    });
+  }
+  function verifyPermission(handle, canRequest) {
+    var opts = { mode: "readwrite" };
+    return handle.queryPermission(opts).then(function (state) {
+      if (state === "granted") return true;
+      if (!canRequest) return false;
+      return handle.requestPermission(opts).then(function (s) { return s === "granted"; });
+    });
+  }
+  function downloadFile(text) {
+    var blob = new Blob([text], { type: "application/javascript" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url; a.download = "content.js";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  }
+
+  if (canSaveDirect) {
+    idbGetHandle().then(function (h) {
+      if (!h) return;
+      fileHandle = h;
+      verifyPermission(h, false).then(function (ok) {
+        if (ok) setStatus("Connected to " + h.name);
+      });
+    });
+  }
+
+  document.getElementById("btnSave").addEventListener("click", function () {
+    var text = "window.SITE_CONTENT = " + JSON.stringify(data, null, 2) + ";\n";
+
+    if (!canSaveDirect) {
+      downloadFile(text);
+      setStatus(isFileProtocol
+        ? "Opened as a local file, so the browser won't allow direct writes — downloaded content.js instead"
+        : "This browser can't save directly — downloaded content.js instead");
+      return;
+    }
+
+    Promise.resolve().then(function () {
+      if (fileHandle) return fileHandle;
+      setStatus("Choose your content.js file…");
+      return window.showOpenFilePicker({
+        types: [{ description: "content.js", accept: { "text/javascript": [".js"] } }]
+      }).then(function (handles) {
+        var h = handles[0];
+        if (h.name !== "content.js" &&
+            !confirm('You picked "' + h.name + '" — this will overwrite that file. Continue?')) {
+          throw { name: "AbortError" };
+        }
+        fileHandle = h;
+        idbSetHandle(h);
+        return h;
+      });
+    }).then(function (h) {
+      return verifyPermission(h, true).then(function (ok) {
+        if (!ok) throw new Error("permission denied");
+        return h.createWritable();
+      });
+    }).then(function (writable) {
+      return writable.write(text).then(function () { return writable.close(); });
+    }).then(function () {
+      setStatus("Saved to " + fileHandle.name + " at " + new Date().toLocaleTimeString());
+    }).catch(function (err) {
+      if (err && err.name === "AbortError") { setStatus("Save cancelled"); return; }
+      console.error(err);
+      downloadFile(text);
+      setStatus("Could not save directly (" + (err && err.message ? err.message : (err && err.name) || "unknown error") +
+        ") — downloaded a copy instead");
+    });
+  });
+
+  setStatus(usingDraft ? "Draft restored" : "Loaded from content.js");
+})();
+</script>
+</body>
+</html>

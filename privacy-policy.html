@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Privacy Policy for Tatva Nirman Infra Pvt. Ltd. explaining how we handle visitor and client information.">
+  <title>Privacy Policy | Tatva Nirman Infra Pvt. Ltd.</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/img/logo-round.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,301,400,401,500,501,700,701,900,901&display=swap" rel="stylesheet">
+
+  <style>
+:root {
+  --black: #100e0a;
+  --black-soft: #17140e;
+  --gold: #d7b45b;
+  --gold-deep: #a9771b;
+  --cream: #faf8f2;
+  --paper: #fffdf8;
+  --ink: #171714;
+  --muted: #706b5e;
+  --line: #e7dfcc;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; color: var(--ink); background: var(--cream);
+  font-family: 'Satoshi', sans-serif; line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: #8a641c; text-underline-offset: 4px; }
+a:hover { color: #5d4210; }
+
+/* Sticky Header matching main site */
+.site-header { 
+  background: var(--cream); 
+  border-bottom: 1px solid var(--line); 
+  position: sticky; 
+  top: 0; 
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+.header-inner {
+  max-width: 1240px; margin: auto; padding: 12px 28px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+}
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+.brand img {
+  width: 38px; height: 38px; border-radius: 50%; object-fit: cover;
+  border: 1px solid var(--gold-deep); background: #fff;
+}
+.brand-title { font-size: 1.05rem; font-weight: 800; letter-spacing: .02em; line-height: 1.1; color: var(--ink); }
+.brand-sub { display: block; margin-top: 3px; color: var(--gold-deep); font-size: .68rem; letter-spacing: .12em; font-weight: 700; text-transform: uppercase; }
+.back-link { color: var(--gold-deep); font-size: .9rem; text-decoration: none; font-weight: 700; }
+.back-link:hover { color: #5d4210; }
+
+.hero {
+  background:
+    radial-gradient(ellipse at 82% 10%, rgba(215,180,91,.15), transparent 35%),
+    linear-gradient(120deg, #100e0a 0%, #17140e 68%, #211a0e 100%);
+  color: #fff; border-bottom: 3px solid var(--gold);
+}
+.hero-inner { max-width: 1240px; margin: auto; padding: 50px 28px 60px; }
+.eyebrow {
+  color: var(--gold); text-transform: uppercase; letter-spacing: .2em;
+  font-size: .76rem; font-weight: 800; display: flex; align-items: center; gap: 12px;
+}
+.eyebrow:before { content: ""; width: 34px; height: 2px; background: var(--gold); }
+h1 {
+  margin: 18px 0 12px; max-width: 850px; font-size: clamp(2.4rem, 5vw, 4.2rem);
+  letter-spacing: -.045em; line-height: 1.05; font-weight: 800;
+}
+.hero-description { max-width: 720px; margin: 0; color: #d7d0c0; font-size: 1.05rem; }
+.hero-meta { display: flex; flex-wrap: wrap; gap: 10px 24px; margin-top: 28px; color: #c8bea7; font-size: .86rem; }
+.hero-meta strong { color: var(--gold); font-weight: 700; }
+
+.layout {
+  max-width: 1240px; 
+  margin: 0 auto; 
+  padding: 36px 28px 76px;
+  display: grid; 
+  grid-template-columns: 265px minmax(0, 1fr); 
+  gap: 28px;
+  align-items: start; 
+  position: relative;
+}
+.sidebar {
+  background: var(--black); color: #f7f1e2; border-top: 3px solid var(--gold);
+  border-radius: 3px; padding: 23px 18px; position: sticky; top: 80px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.12);
+}
+.sidebar-label { margin: 0 10px 12px; color: var(--gold); font-size: .7rem; font-weight: 800; letter-spacing: .17em; text-transform: uppercase; }
+.sidebar nav { display: grid; gap: 2px; }
+.sidebar a { display: block; padding: 8px 10px; border-left: 2px solid transparent; color: #ded6c5; text-decoration: none; font-size: .86rem; line-height: 1.45; }
+.sidebar a:hover { color: var(--gold); border-left-color: var(--gold); background: rgba(215,180,91,.08); }
+.sidebar-note { margin: 18px 10px 0; padding-top: 15px; border-top: 1px solid #393226; color: #aaa18d; font-size: .78rem; line-height: 1.6; }
+.content {
+  min-width: 0; background: var(--paper); border: 1px solid #e6decc;
+  padding: clamp(26px, 4.6vw, 56px); box-shadow: 0 20px 50px rgba(37,29,10,.055);
+}
+.content-intro {
+  padding: 20px 22px; margin: 0 0 30px; background: #f2ead7;
+  border-left: 4px solid var(--gold-deep); color: #514a3a;
+}
+section { scroll-margin-top: 80px; padding-top: 8px; margin-top: 28px; }
+section + section { border-top: 1px solid var(--line); padding-top: 26px; }
+h2 { margin: 0 0 10px; font-size: 1.23rem; line-height: 1.4; color: #241d10; }
+h2:before { content: ""; display: inline-block; width: 20px; height: 2px; background: var(--gold-deep); vertical-align: middle; margin: 0 10px 4px 0; }
+h3 { margin: 18px 0 6px; font-size: 1rem; color: #46371a; }
+p { margin: 8px 0 14px; }
+ul { padding-left: 22px; margin: 8px 0 16px; }
+li { margin: 5px 0; padding-left: 3px; }
+.contact-card { margin-top: 12px; padding: 21px 23px; border: 1px solid #e5d7b5; background: #fbf6e9; }
+.contact-card p { margin: 4px 0; }
+.site-footer { background: var(--black); color: #e4dcc9; border-top: 3px solid var(--gold); }
+.footer-inner {
+  max-width: 1240px; margin: auto; padding: 30px 28px;
+  display: flex; align-items: center; justify-content: space-between; gap: 22px; flex-wrap: wrap;
+}
+.footer-brand { color: var(--gold); font-weight: 800; letter-spacing: .15em; }
+.footer-copy { color: #aaa18d; font-size: .82rem; margin-top: 5px; }
+.footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+.footer-links a { color: #eee4ce; text-decoration: none; font-size: .88rem; }
+.footer-links a:hover { color: var(--gold); }
+@media (max-width: 880px) {
+  .layout { grid-template-columns: 1fr; margin-top: 0; }
+  .sidebar { position: static; }
+  .sidebar nav { grid-template-columns: repeat(2, minmax(0, 1fr)); display: grid; }
+  .hero-inner { padding-top: 40px; padding-bottom: 50px; }
+}
+@media (max-width: 560px) {
+  .header-inner { padding: 10px 14px; }
+  .brand img { width: 32px; height: 32px; }
+  .brand-title { font-size: .92rem; }
+  .brand-sub { font-size: .58rem; }
+  .back-link { font-size: .8rem; }
+  .hero-inner { padding: 36px 20px 42px; }
+  .layout { padding: 20px 13px 44px; gap: 14px; }
+  .content { padding: 25px 20px; }
+  .sidebar nav { grid-template-columns: 1fr; }
+  .footer-inner { padding: 25px 20px; }
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="index.html" aria-label="Tatva Nirman home">
+        <img src="assets/img/logo.jpg" alt="Tatva Nirman logo">
+        <span class="brand-title">Tatva Nirman<span class="brand-sub">WATER • SEWERAGE • SOLAR EPC</span></span>
+      </a>
+      <a class="back-link" href="index.html">← Back to website</a>
+    </div>
+  </header>
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">Tatva Nirman · Legal Information</div>
+      <h1>Privacy Policy</h1>
+      <p class="hero-description">How we handle information when you visit our website or contact us regarding infrastructure services.</p>
+      <div class="hero-meta"><span><strong>Effective Date:</strong> 10 October 2026</span><span><strong>Last Updated:</strong> 10 October 2026</span></div>
+    </div>
+  </section>
+  <main class="layout">
+    <aside class="sidebar">
+      <p class="sidebar-label">On this page</p>
+      <nav aria-label="Page contents">
+        <a href="#information">1. Information We Collect</a>
+        <a href="#use">2. How We Use Information</a>
+        <a href="#sharing">3. Sharing of Information</a>
+        <a href="#security">4. Data Security</a>
+        <a href="#rights">5. Your Rights</a>
+        <a href="#contact">6. Contact Us</a>
+      </nav>
+      <div class="sidebar-note">For privacy-related questions, please contact Tatva Nirman using the official details below.</div>
+    </aside>
+    <article class="content">
+      <div class="content-intro">At <strong>Tatva Nirman Infra Pvt. Ltd.</strong>, we respect your privacy and are committed to protecting any personal or professional information you share when interacting with our website.</div>
+      
+      <section id="information">
+        <h2>1. Information We Collect</h2>
+        <p>We collect information that you choose to provide directly when filling out our enquiry forms, requesting project credentials, or applying for vendor/career opportunities. This includes your name, company/organisation name, email address, phone number, and project details.</p>
+      </section>
+
+      <section id="use">
+        <h2>2. How We Use Information</h2>
+        <p>The information collected is used strictly to:</p>
+        <ul>
+          <li>Respond to tender queries, project proposals, and client enquiries.</li>
+          <li>Communicate regarding our water treatment, sewerage, and solar EPC services.</li>
+          <li>Process vendor/subcontractor and career applications.</li>
+        </ul>
+      </section>
+
+      <section id="sharing">
+        <h2>3. Sharing of Information</h2>
+        <p>We do not sell, trade, or rent personal data. Information is shared only with internal authorized teams or trusted operational partners strictly as needed to respond to your official business requirements.</p>
+      </section>
+
+      <section id="security">
+        <h2>4. Data Security</h2>
+        <p>We maintain reasonable technical and organizational safeguards to protect your information against unauthorized access, loss, or disclosure.</p>
+      </section>
+
+      <section id="rights">
+        <h2>5. Your Rights</h2>
+        <p>You may request access to, correction of, or deletion of any personal details you have provided through our website by contacting our support desk.</p>
+      </section>
+
+      <section id="contact">
+        <h2>6. Contact Us</h2>
+        <p>If you have any questions or concerns regarding this Privacy Policy, please contact us at:</p>
+        <div class="contact-card">
+          <strong>Tatva Nirman Infra Pvt. Ltd. (CIN: U70109GJ2021PTC125579)</strong><br>
+          <p>Address: Unique Square, Causeway Dabholi, Singanpore, Link Road, Katargam, Surat – 395004, Gujarat, India</p>
+          <p>Email: <strong>info@tatvanirman.com</strong></p>
+          <p>Phone: <strong>+91 98344 22813</strong></p>
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div><div class="footer-brand">TATVA NIRMAN</div><div class="footer-copy">© 2026 Tatva Nirman Infra Pvt. Ltd. All rights reserved.</div></div>
+      <nav class="footer-links" aria-label="Legal links">
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms-and-conditions.html">Terms &amp; Conditions</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
