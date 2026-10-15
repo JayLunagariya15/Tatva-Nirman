@@ -44,7 +44,8 @@
   --shadow:0 10px 24px -10px rgba(13,11,8,.18);
   --shadow-lg:0 24px 48px -16px rgba(13,11,8,.28);
 
-  --container:1280px;
+  /* --container:1280px; */
+  --container:100%;
   --gutter:clamp(1.1rem,4vw,3rem);
   --section-y:clamp(4.4rem,8vw,7.4rem);
 
@@ -361,7 +362,8 @@ p:last-child{margin-bottom:0}
 .filter{padding:.55rem 1.1rem;border:1.5px solid var(--line);background:#fff;font-family:var(--label);font-size:.78rem;font-weight:650;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-2);transition:all .15s ease}
 .filter:hover{border-color:var(--ink-700);color:var(--ink-900)}
 .filter.is-active{background:var(--ink-900);border-color:var(--ink-900);color:#fff}
-.projects{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.4rem}
+/* .projects{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.4rem} */
+.projects{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.4rem}
 .project{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);overflow:hidden;
   transition:box-shadow .15s ease,border-color .15s ease}
 .project:hover{box-shadow:var(--shadow);border-color:var(--ink-700);position:relative;z-index:1}
