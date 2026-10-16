@@ -689,7 +689,7 @@ window.SITE_CONTENT = {
         "status": "Ongoing",
         "scope": "Produce renewable electricity through a ground-mounted solar installation for commercial sale.",
         "image": "",
-        "featured": true
+        "featured": false
       },
       {
         "name": "Storm Water Drainage Improvement",
