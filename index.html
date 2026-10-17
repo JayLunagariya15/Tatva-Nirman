@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0E0C09">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Tatva Nirman Infra Pvt. Ltd.">
+  <title>Tatva Nirman Infra Pvt. Ltd.</title>
+
+  <!-- Favicon: your real logo -->
+  <link rel="icon" type="image/png" href="assets/img/logo-round.png">
+
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,301,400,401,500,501,700,701,900,901&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <div class="bg-watermark" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- ==================================================================
+       Every section below is filled in by assets/js/app.js from the data
+       in assets/js/content.js. To change wording, photos, projects or
+       contact details, edit content.js (or use admin.html).
+       =================================================================== -->
+
+  <header class="header" id="header"></header>
+
+  <main id="main">
+    <section class="hero" id="hero" aria-label="Introduction"></section>
+    <section class="clientwall" id="clientwall" aria-label="Departments and clients"></section>
+    <section class="section" id="stats" style="padding-block:clamp(2.2rem,4vw,3.2rem)" aria-label="Key figures"></section>
+
+    <section class="section section--tint" id="about" aria-labelledby="about-h"></section>
+    <section class="visionmission" id="visionmission" aria-label="Vision and mission"></section>
+    <section class="section" id="profile" aria-label="Company profile"></section>
+    <section class="section" id="services" aria-label="Services"></section>
+    <section class="section" id="capabilities" aria-label="Capabilities"></section>
+    <section class="section section--tint" id="sectors" aria-label="Clients and schemes"></section>
+    <section class="section" id="process" aria-label="Delivery process"></section>
+    <section class="section section--tint" id="projects" aria-label="Projects"></section>
+    <section class="section" id="presence" aria-label="Areas of operation"></section>
+    <section class="section" id="careers" aria-label="Careers and vendor registration"></section>
+    <section class="cta" id="cta" aria-label="Contact call to action"></section>
+    <section class="section" id="contact" aria-label="Contact"></section>
+  </main>
+
+  <footer class="footer" id="footer"></footer>
+  <div class="fab" id="fab"></div>
+
+  <!-- Anchor target for "Home" links -->
+  <script>
+    // #home resolves to the top of the page
+    (function () {
+      var a = document.createElement('span');
+      a.id = 'home';
+      a.style.cssText = 'position:absolute;top:0';
+      document.body.insertBefore(a, document.body.firstChild);
+    })();
+  </script>
+
+  <!-- 1. Content (edit this)  2. Shared renderer  3. Homepage renderer -->
+  <script src="assets/js/content.js"></script>
+  <script>
+    // Lets admin.html preview unsaved edits via index.html?preview=1
+    (function () {
+      if (location.search.indexOf('preview=1') === -1) return;
+      try {
+        var d = sessionStorage.getItem('TN_PREVIEW');
+        if (!d) return;
+        window.SITE_CONTENT = JSON.parse(d);
+        var b = document.createElement('div');
+        b.textContent = 'PREVIEW — unsaved editor content. Not the live site.';
+        b.style.cssText = 'position:fixed;left:0;right:0;bottom:0;z-index:999;background:#eda007;color:#3a2600;' +
+          'font:600 13px "Segoe UI",Arial;text-align:center;padding:.45rem;letter-spacing:.04em';
+        document.body.appendChild(b);
+      } catch (e) { /* fall back to the saved content */ }
+    })();
+  </script>
+  <script src="assets/js/common.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
