@@ -618,7 +618,7 @@ window.SITE_CONTENT = {
         "year": "2024",
         "status": "Ongoing",
         "scope": "Design, construction and commissioning of SBR-based STP with inlet works, sludge handling, chlorination and 5-year O&M.",
-        "image": "",
+        "image": "assets/img/wtp-pusad.svg",
         "featured": true
       },
       {
@@ -632,7 +632,7 @@ window.SITE_CONTENT = {
         "year": "2024",
         "status": "Ongoing",
         "scope": "Laying of RCC NP3 sewer lines, manholes, house service connections, sewage pumping station and road restoration.",
-        "image": "",
+        "image": "assets/img/STP-karad.svg",
         "featured": true
       },
       {
@@ -646,7 +646,7 @@ window.SITE_CONTENT = {
         "year": "2025",
         "status": "Completed",
         "scope": "Supply, installation and commissioning of grid-connected rooftop solar with net metering and 5-year CMC.",
-        "image": "",
+        "image": "assets/img/RooftopSolar.svg",
         "featured": true
       },
       {
@@ -660,7 +660,7 @@ window.SITE_CONTENT = {
         "year": "2026",
         "status": "Ongoing",
         "scope": "Complete water purification plant featuring clarification basins, rapid sand filters, clear water holding tanks, and high-duty pumping units.",
-        "image": "",
+        "image": "assets/img/ramtek-water.svg",
         "featured": false
       },
       {
@@ -674,7 +674,7 @@ window.SITE_CONTENT = {
         "year": "2022",
         "status": "Completed",
         "scope": "Conventional WTP with tube settlers, rapid gravity filters, clear water reservoir and pumping machinery.",
-        "image": "",
+        "image": "assets/img/arani-wtp.svg",
         "featured": false
       },
       {
@@ -688,7 +688,7 @@ window.SITE_CONTENT = {
         "year": "2026",
         "status": "Ongoing",
         "scope": "Produce renewable electricity through a ground-mounted solar installation for commercial sale.",
-        "image": "",
+        "image": "assets/img/solar-tajpar.svg",
         "featured": false
       },
       {
@@ -702,7 +702,7 @@ window.SITE_CONTENT = {
         "year": "2024",
         "status": "Completed",
         "scope": "Construction of RCC box drains, culverts and outfall works with desilting of existing network.",
-        "image": "",
+        "image": "assets/img/stp-wardha.svg",
         "featured": false
       },
       {
@@ -716,7 +716,7 @@ window.SITE_CONTENT = {
         "year": "2025",
         "status": "Completed",
         "scope": "Conventional Drinking Water Treatment Plant: Tube Settlers, Rapid Gravity Filtration, Clear Water Storage and Pumping System",
-        "image": "",
+        "image": "assets/img/wtp-deori.svg",
         "featured": false
       },
       {
@@ -730,7 +730,7 @@ window.SITE_CONTENT = {
         "year": "2026",
         "status": "Ongoing",
         "scope": "Generate clean solar electricity directly from a ground-mounted solar power system.",
-        "image": "",
+        "image": "assets/img/GroundMountedSolar.svg",
         "featured": true
       }
     ]
