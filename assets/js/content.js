@@ -683,7 +683,7 @@ window.SITE_CONTENT = {
         "category": "Solar",
         "state": "Gujarat",
         "location": "Tajpar",
-        "contractValue": "₹ 84.61 Cr",
+        "contractValue": "₹ 54.61 Cr",
         "capacity": "2 MW",
         "year": "2026",
         "status": "Ongoing",
