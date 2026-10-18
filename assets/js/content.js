@@ -678,7 +678,7 @@ window.SITE_CONTENT = {
         "featured": false
       },
       {
-        "name": "Rooftop Solar — Tajpar",
+        "name": "Groundmounted Solar Project — Tajpar",
         "client": "TAJPAR, GJ",
         "category": "Solar",
         "state": "Gujarat",
@@ -720,7 +720,7 @@ window.SITE_CONTENT = {
         "featured": false
       },
       {
-        "name": "Rooftop Solar — Lathidad",
+        "name": "Groundmounted Solar Project — Lathidad",
         "client": "LATHIDAD, GJ",
         "category": "Solar",
         "state": "Gujarat",
